@@ -1,14 +1,17 @@
-output : client.o server.o helper.o
-	gcc -o client client.o helper.o 
-	gcc -o server server.o helper.o 
+output : client.o helper.o relay.o server.o
+	gcc -o relay relay.o helper.o -lm
+	gcc -o client client.o helper.o -lm
+	gcc -o server server.o helper.o -lm
 	make objClean
 
-profile : client.o server.o helper.o profile.o
-	gcc -o client client.o helper.o 
-	gcc -o server server.o helper.o 
-	gcc -o profile profile.o
+relay : client.o helper.o relay.o
+	gcc -o relay relay.o helper.o -lm
+	gcc -o client client.o helper.o -lm
 	make objClean
 	
+relay.o : relay.c
+	gcc -c relay.c
+
 client.o : client.c
 	gcc -c client.c
 
@@ -18,13 +21,8 @@ server.o : server.c
 helper.o : helper.c
 	gcc -c helper.c
 
-profile.o : profile.c
-	gcc -c profile.c
-
 objClean :
-	rm -f *.o
+	rm *.o
 
 clean :
-	rm -f client
-	rm -f server
-	rm -f profile
+	rm -f relay server client
